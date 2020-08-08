@@ -10,7 +10,7 @@ import org.testng.Assert;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.TimeUnit;
-
+import org.openqa.selenium.JavascriptExecutor;
 
 
 public class RegistrationPage {
@@ -19,110 +19,119 @@ public class RegistrationPage {
     By dateTime_number_Logo = By.xpath("//*[@id=\"header\"]/div/div[2]/div");
     By header1 = By.tagName("h2");
     By header2 = By.tagName("h3");
-    By name_field = By.id("name");
-    By email_field = By.id("email");
-    By phone_field = By.id("phone");
-    By address_field = By.id("address");
-    By vehicle_dropdown = By.xpath("//*[@id=\"contactform\"]//div[4]//div");
-    By registrationNumber_field = By.id("registration-number");
+    public By name_field = By.id("name");
+    public By email_field = By.id("email");
+    public By phone_field = By.id("phone");
+    public By address_field = By.id("address");
+    public By vehicle_dropdown = By.xpath("//*[@id=\"contactform\"]//div[4]//div");
+    public By registrationNumber_field = By.id("registration-number");
     By carMake_dropdown = By.id("car_make_brand_id");
     By carModel_dropdown = By.id("car_model_id");
-    By drivingLicense_button = By.xpath("//*[@id=\"contactform\"]//div[9]/div/label");
+    public By drivingLicense_button = By.xpath("//*[@id=\"contactform\"]//div[9]/div/label");
     By insuranceCopy_button = By.xpath("//*[@id=\"contactform\"]//div[10]/div/label");
-    By registerNow_button = By.id("submit");
+    public By registerNow_button = By.id("submit");
     By success_logo = By.xpath("//*[@id=\"wrapper\"]/div[2]//div/center[1]/img");
     By successMessage = By.tagName("h1");
+    By alreadyLogin_link = By.linkText("Already Have An Account?");
+    public By viewDriverLicenseImageSuccessfully = By.xpath("//*[@id=\"contactform\"]//div[9]/div/a");
+    public By viewInsuranceCopyImageSuccessfully = By.xpath("//*[@id=\"contactform\"]//div[10]/div/a");
 
-    public RegistrationPage(WebDriver driver){
+    public RegistrationPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    public void waitTillElementClickable(By my_driver, WebDriver element){
-        try{
+    public WebDriverWait explicitWait() {
+        WebDriverWait wait = new WebDriverWait((WebDriver) driver, 30);
+        return wait;
+    }
+
+    public void waitTillElementClickable(By my_driver, WebDriver element) {
+        try {
             WebDriverWait wait = new WebDriverWait((WebDriver) my_driver, 30);
             wait.until(ExpectedConditions.elementToBeClickable((By) element));
         } catch (Exception ignored) {
         }
     }
 
-    public void verifyTitle(){
+    public void verifyTitle() {
         String actualTitle = driver.getTitle();
         Assert.assertEquals(actualTitle, "Join LoadX For Free");
     }
 
-    public void logoClickable(){
+    public void logoClickable() {
         RegistrationPage registrationPage = new RegistrationPage(driver);
         registrationPage.waitTillElementClickable(logo_loadX, driver);
     }
 
-    public void logoDisplaying(){
+    public void logoDisplaying() {
         boolean display_logo = driver.findElement(logo_loadX).isDisplayed();
         Assert.assertTrue(display_logo);
     }
-    public void DateTimeNumberClickable(){
+
+    public void DateTimeNumberClickable() {
         RegistrationPage registrationPage = new RegistrationPage(driver);
         registrationPage.waitTillElementClickable(dateTime_number_Logo, driver);
     }
 
-    public void DateTimeNumberDisplaying(){
+    public void DateTimeNumberDisplaying() {
         boolean display_logo = driver.findElement(dateTime_number_Logo).isDisplayed();
         Assert.assertTrue(display_logo);
     }
 
-    public void largeHeaderDisplaying(){
+    public void largeHeaderDisplaying() {
         boolean header = driver.findElement(header1).isDisplayed();
         Assert.assertTrue(header);
     }
 
-    public void smallHeaderDisplaying(){
+    public void smallHeaderDisplaying() {
         boolean header = driver.findElement(header2).isDisplayed();
         Assert.assertTrue(header);
     }
 
-    public void verifyLargeHeaderText(String text){
+    public void verifyLargeHeaderText(String text) {
         String header = driver.findElement(header1).getText();
         Assert.assertEquals(header, text);
     }
 
-    public void verifySmallHeaderText(String text){
+    public void verifySmallHeaderText(String text) {
         String header = driver.findElement(header2).getText();
         Assert.assertEquals(header, text);
     }
 
 
-    public void enterFullName(String name){
+    public void enterFullName(String name) {
         driver.findElement(name_field).sendKeys(name);
     }
 
-    public void enterEmailAddress(String email){
+    public void enterEmailAddress(String email) {
         driver.findElement(email_field).sendKeys(email);
     }
 
-    public void enterPhoneNumber(String number){
+    public void enterPhoneNumber(String number) {
         driver.findElement(phone_field).sendKeys(number);
     }
 
-    public void enterAddress(String address){
+    public void enterAddress(String address) {
         driver.findElement(address_field).sendKeys(address);
     }
 
-    public void selectVehicle(int vehicle_index){
+    public void selectVehicle(int vehicle_index) {
         driver.findElement(vehicle_dropdown).click();
         Actions action = new Actions(driver);
-        action.click(driver.findElement(By.xpath("//*[@id=\"contactform\"]//div[4]//div/ul/li["+
-                vehicle_index+"]/a"))).perform();
+        action.click(driver.findElement(By.xpath("//*[@id=\"contactform\"]//div[4]//div/ul/li[" +
+                vehicle_index + "]/a"))).perform();
     }
 
-    public void enterRegisterNumber(String registrationNumber){
+    public void enterRegisterNumber(String registrationNumber) {
         driver.findElement(registrationNumber_field).sendKeys(registrationNumber);
     }
 
-    public void selectCarMake(String makeName){
+    public void selectCarMake(String makeName) {
         Select selectMake = new Select(driver.findElement(carMake_dropdown));
         selectMake.selectByVisibleText(makeName);
     }
 
-    public void selectCarModel(String makeModel){
+    public void selectCarModel(String makeModel) {
         WebDriverWait wait = new WebDriverWait(driver, 30);
         wait.until(ExpectedConditions.textToBePresentInElement(driver.findElement(carModel_dropdown),
                 "Select Model"));
@@ -152,25 +161,60 @@ public class RegistrationPage {
         robot.keyPress(KeyEvent.VK_ESCAPE);
     }
 
-    public void submitRegisteration(){
+    public void submitRegisteration() {
         driver.findElement(registerNow_button).click();
     }
 
-    public void verifyURLChanges(String newURL){
+    public void verifyURLChanges(String newURL) {
         String currentURL = driver.getCurrentUrl();
         Assert.assertEquals(currentURL, newURL);
     }
 
-    public void verifySuccessLogoDisplaying(){
+    public void verifySuccessLogoDisplaying() {
         WebDriverWait wait = new WebDriverWait(driver, 30);
         wait.until(ExpectedConditions.presenceOfElementLocated(success_logo));
-        boolean logo =  driver.findElement(success_logo).isDisplayed();
+        boolean logo = driver.findElement(success_logo).isDisplayed();
         Assert.assertTrue(logo);
 
     }
 
-    public void verifySuccessMessageDisplaying(){
+    public void scrollDownTo(WebElement element){
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView();", element);
+    }
+
+    public void verifySuccessMessageDisplaying() {
         boolean message = driver.findElement(successMessage).isDisplayed();
         Assert.assertTrue(message);
+    }
+
+    public void verifyTextEnteredCorrectly(By element, String text) {
+        String name_value = driver.findElement(element).getAttribute("value");
+        Assert.assertEquals(name_value, text);
+    }
+
+    public void verifyTextEnteredDisplaying(By element, String text) {
+        String name_value = driver.findElement(element).getText();
+        Assert.assertEquals(name_value, text);
+    }
+
+    public void verifyAlreadyLoginLinkDisplaying() {
+        boolean alreadyLoginButton = driver.findElement(alreadyLogin_link).isDisplayed();
+        Assert.assertTrue(alreadyLoginButton);
+        RegistrationPage registrationPage = new RegistrationPage(driver);
+        registrationPage.scrollDownTo(driver.findElement(alreadyLogin_link));
+    }
+
+    public void verifyAlreadyLoginButtonClickable() {
+        WebElement alreadyLoginButton = driver.findElement(alreadyLogin_link);
+        RegistrationPage registrationPage = new RegistrationPage(driver);
+        registrationPage.waitTillElementClickable(dateTime_number_Logo, driver);
+        alreadyLoginButton.click();
+    }
+
+    public void verifyImageUploadButtonDisplayed(By element){
+        WebElement imageUplaodMessage = driver.findElement(element);
+        boolean imageUpload = imageUplaodMessage.isDisplayed();
+        Assert.assertTrue(imageUpload);
     }
 }
